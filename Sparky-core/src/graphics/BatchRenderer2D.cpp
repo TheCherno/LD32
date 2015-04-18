@@ -3,6 +3,7 @@
 namespace sparky { namespace graphics {
 
 	BatchRenderer2D::BatchRenderer2D()
+		: m_IndexCount(0)
 	{
 		init();
 	}

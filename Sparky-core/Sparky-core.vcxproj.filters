@@ -84,9 +84,6 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="main.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="ext\freetype\src\autofit\autofit.c">
       <Filter>Source Files\ext\freetype</Filter>
     </ClCompile>
@@ -285,17 +282,11 @@
     <ClCompile Include="src\graphics\font_manager.cpp">
       <Filter>Source Files\graphics</Filter>
     </ClCompile>
-    <ClCompile Include="tilelayer.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="src\audio\sound_manager.cpp">
       <Filter>Source Files\audio</Filter>
     </ClCompile>
     <ClCompile Include="src\audio\sound.cpp">
       <Filter>Source Files\audio</Filter>
-    </ClCompile>
-    <ClCompile Include="examples\game.cpp">
-      <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

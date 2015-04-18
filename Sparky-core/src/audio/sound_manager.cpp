@@ -39,7 +39,9 @@ namespace sparky { namespace audio {
 	void SoundManager::add(Sound* sound)
 	{
 		m_Sounds.push_back(sound);
+#ifdef SPARKY_EMSCRIPTEN
 		SoundManagerAdd(sound->getName().c_str(), sound->getFileName().c_str());
+#endif
 	}
 
 	Sound* SoundManager::get(const std::string& name)
