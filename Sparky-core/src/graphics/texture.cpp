@@ -2,8 +2,8 @@
 
 namespace sparky { namespace graphics {
 
-	Texture::Texture(const std::string& filename)
-		: m_FileName(filename)
+	Texture::Texture(const std::string& name, const std::string& filename)
+		: m_Name(name), m_FileName(filename)
 	{
 		m_TID = load();
 	}
@@ -23,9 +23,9 @@ namespace sparky { namespace graphics {
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
 #ifdef SPARKY_EMSCRIPTEN
-		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, m_Width, m_Height, 0, GL_RGB, GL_UNSIGNED_BYTE, pixels);
+		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, m_Width, m_Height, 0, GL_RGBA, GL_UNSIGNED_BYTE, pixels);
 #else
-		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, m_Width, m_Height, 0, GL_BGR, GL_UNSIGNED_BYTE, pixels);
+		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, m_Width, m_Height, 0, GL_BGRA, GL_UNSIGNED_BYTE, pixels);
 #endif
 		glBindTexture(GL_TEXTURE_2D, 0);
 

@@ -45,6 +45,11 @@ namespace sparky { namespace graphics {
 		m_Renderables.push_back(renderable);
 	}
 
+	void Layer::addTemp(Renderable2D* renderable)
+	{
+		m_TempRenderables.push_back(renderable);
+	}
+
 	void Layer::render()
 	{
 		m_Shader->enable();
@@ -53,8 +58,13 @@ namespace sparky { namespace graphics {
 		for (const Renderable2D* renderable : m_Renderables)
 			renderable->submit(m_Renderer);
 
+		for (const Renderable2D* renderable : m_TempRenderables)
+			renderable->submit(m_Renderer);
+
 		m_Renderer->end();
 		m_Renderer->flush();
+
+		m_TempRenderables.clear();
 	}
 
 } }

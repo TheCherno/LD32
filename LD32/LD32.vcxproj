@@ -79,15 +79,55 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="src\layers\DebugLayer.h" />
+    <ClInclude Include="src\layers\LevelLayer.h" />
     <ClInclude Include="src\layers\UILayer.h" />
     <ClInclude Include="src\LD32Application.h" />
+    <ClInclude Include="src\level\entity\enemies\Fighter.h" />
+    <ClInclude Include="src\level\entity\Entity.h" />
+    <ClInclude Include="src\level\entity\Player.h" />
+    <ClInclude Include="src\level\items\Item.h" />
+    <ClInclude Include="src\level\items\Shield.h" />
+    <ClInclude Include="src\level\Level.h" />
+    <ClInclude Include="src\level\Nuke.h" />
+    <ClInclude Include="src\level\objects\LevelObject.h" />
+    <ClInclude Include="src\level\Portal.h" />
+    <ClInclude Include="src\level\projectiles\Projectile.h" />
+    <ClInclude Include="src\level\projectiles\TimeProjectile.h" />
+    <ClInclude Include="src\menu\AboutMenu.h" />
+    <ClInclude Include="src\menu\GameOverMenu.h" />
+    <ClInclude Include="src\menu\HelpMenu.h" />
+    <ClInclude Include="src\menu\MainMenu.h" />
+    <ClInclude Include="src\menu\Menu.h" />
+    <ClInclude Include="src\State.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="src\layers\DebugLayer.cpp" />
+    <ClCompile Include="src\layers\LevelLayer.cpp" />
     <ClCompile Include="src\layers\UILayer.cpp" />
     <ClCompile Include="src\LD32Application.cpp" />
+    <ClCompile Include="src\level\entity\enemies\Fighter.cpp" />
+    <ClCompile Include="src\level\entity\Entity.cpp" />
+    <ClCompile Include="src\level\entity\Player.cpp" />
+    <ClCompile Include="src\level\items\Shield.cpp" />
+    <ClCompile Include="src\level\Level.cpp" />
+    <ClCompile Include="src\level\Nuke.cpp" />
+    <ClCompile Include="src\level\objects\LevelObject.cpp" />
+    <ClCompile Include="src\level\projectiles\Projectile.cpp" />
+    <ClCompile Include="src\level\projectiles\TimeProjectile.cpp" />
     <ClCompile Include="src\main.cpp" />
+    <ClCompile Include="src\menu\AboutMenu.cpp" />
+    <ClCompile Include="src\menu\GameOverMenu.cpp" />
+    <ClCompile Include="src\menu\HelpMenu.cpp" />
+    <ClCompile Include="src\menu\MainMenu.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="shaders\es3\level.es3.frag" />
+    <None Include="shaders\es3\level.es3.vert" />
+    <None Include="shaders\es3\ui.es3.frag" />
+    <None Include="shaders\es3\ui.es3.vert" />
+    <None Include="shaders\level.frag" />
+    <None Include="shaders\level.vert" />
     <None Include="shaders\ui.frag" />
     <None Include="shaders\ui.vert" />
   </ItemGroup>

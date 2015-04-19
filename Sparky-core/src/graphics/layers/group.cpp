@@ -2,8 +2,8 @@
 
 namespace sparky { namespace graphics {
 
-	Group::Group(const maths::mat4& transform)
-		: m_TransformationMatrix(transform)
+	Group::Group(const maths::mat4& transformMatrix)
+		: m_TransformationMatrix(transformMatrix)
 	{
 	}
 

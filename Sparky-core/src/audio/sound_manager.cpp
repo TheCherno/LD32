@@ -2,14 +2,7 @@
 
 namespace sparky { namespace audio {
 
-#ifdef SPARKY_EMSCRIPTEN
-	extern "C" void SoundManagerAdd(const char* name, const char* filename);
-	extern "C" void SoundManagerPlay(const char* name);
-	extern "C" void SoundManagerPause(const char* name);
-	extern "C" void SoundManagerStop(const char* name);
-	extern "C" void SoundManagerLoop(const char* name);
-	extern "C" void SoundManagerSetGain(const char* name, double gain);
-#else
+#ifndef SPARKY_EMSCRIPTEN
 	gau_Manager* SoundManager::m_Manager = nullptr;
 	ga_Mixer* SoundManager::m_Mixer = nullptr;
 #endif
@@ -22,7 +15,7 @@ namespace sparky { namespace audio {
 		EM_ASM(
 		Module.SoundManager = { };
 		Module.SoundManager.m_Sounds = { };
-		Module.SoundManagerAdd = function(name, filename) { alert('Loading audio file ' + name + ' path=' + filename + '!'); Module.SoundManager.m_Sounds[name] = new Audio(filename); };
+		Module.SoundManagerAdd = function(name, filename) { /*alert('Loading audio file ' + name + ' path=' + filename + '!');*/ Module.SoundManager.m_Sounds[name] = new Audio(filename); };
 		Module.SoundManagerPlay = function(name) { Module.SoundManager.m_Sounds[name].play(); };
 		Module.SoundManagerPause = function(name) { Module.SoundManager.m_Sounds[name].pause(); };
 		Module.SoundManagerStop = function(name) { Module.SoundManagerPause(name); Module.SoundManager.m_Sounds[name].currentTime = 0; Module.SoundManager.m_Sounds[name].loop = false; };
