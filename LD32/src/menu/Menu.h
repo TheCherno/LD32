@@ -14,6 +14,7 @@ protected:
 	std::map<unsigned int, sparky::maths::vec2> m_SelectedMapping;
 	std::map<unsigned int, void(*)()> m_ActionMapping;
 	sparky::graphics::Window* m_Window;
+	sparky::graphics::Sprite* m_Sprite;
 public:
 	Menu(sparky::graphics::Window* window, sparky::graphics::Sprite* sprite = nullptr)
 	{
@@ -24,6 +25,7 @@ public:
 		m_Selected = 0;
 		m_Layer->add(m_Selector);
 		m_Window = window;
+		m_Sprite = sprite;
 	}
 
 	void create()

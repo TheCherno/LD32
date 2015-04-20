@@ -17,7 +17,7 @@ uniform float fade_out;
 
 void main()
 {
-	float intensity = 100.0 / length(fs_in.position.xy - vec2(880, 1020)) + 0.1;
+	float intensity = 200.0 / length(fs_in.position.xy - vec2(880, 1020)) + 0.1;
 	vec4 sunColor = vec4(1, 0.9, 0.8, 1) * intensity;
 	vec4 texColor = fs_in.color;
 

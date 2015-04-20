@@ -11,8 +11,24 @@ static void GameOverMenu_okay()
 }
 
 GameOverMenu::GameOverMenu(sparky::graphics::Window* window)
-	: Menu(window, new Sprite(0, 0, TextureManager::get("Menu_Gameover")))
+	: Menu(window, new Sprite(0, 0, 1280, 720, TextureManager::get(
+#ifdef SPARKY_EMSCRIPTEN
+	"Menu_Main_Gameover"
+#else
+	"Menu_Gameover"
+#endif
+	)))
 {
+
+#ifdef SPARKY_EMSCRIPTEN
+	std::vector<maths::vec2> uv(4);
+	uv[0] = maths::vec2(0, 0.3515625f);
+	uv[1] = maths::vec2(0, 0.3515625f * 2.0f);
+	uv[2] = maths::vec2(0.625f, 0.3515625f * 2.0f);
+	uv[3] = maths::vec2(0.625f, 0.3515625f);
+	m_Sprite->setUV(uv);
+#endif
+
 	m_Score = new Label("", 300, 150, "Handwritten", 0xaaaaaaaa);
 	m_Stage = new Label("", 600, 60, "Handwritten", 0x88888888);
 	m_Layer->add(m_Score);

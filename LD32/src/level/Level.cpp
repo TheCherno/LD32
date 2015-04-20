@@ -53,9 +53,8 @@ Level::Level(unsigned int difficulty)
 	m_Progress = 0;
 	m_LevelEnd = 4500 + m_Difficulty * 5000;
 
-	LD32Application::debugLayer->add(new Sprite(300, 25, 680, 40, 0x2faaaaaa));
+	m_ProgressBarBackground = new Sprite(300, 25, 680, 40, 0x2faaaaaa);
 	m_ProgressBar = new Sprite(305, 30, 0, 30, 0x2fffffff);
-	LD32Application::debugLayer->add(m_ProgressBar);
 }
 
 Level::~Level()
@@ -66,6 +65,8 @@ Level::~Level()
 	delete m_LevelLayer;
 	delete m_BackgroundLayer;
 	delete m_Portal;
+	delete m_ProgressBar;
+	delete m_ProgressBarBackground;
 }
 
 
@@ -106,7 +107,7 @@ void Level::generatePlatforms(int count)
 	{
 		float w = (float)(rand() % 300 + 100);
 		float h = (float)(rand() % 500 + 200);
-		addBackgroundObject(new LevelObject(sx2 + 20, 0, new Sprite(0, 0, w, h, 0x777777777), false));
+		addBackgroundObject(new LevelObject(sx2 + 20, 0, new Sprite(0, 0, w, h, 0x77777777), false));
 		sx2 += 100 + rand() % 100 + w;
 	}
 	m_PlatformOffsetX = sx + 100;
@@ -200,12 +201,13 @@ void Level::update()
 		generatePlatforms(10);
 	}
 	m_Progress = (int) m_Player->getPosition().x;
-	m_ProgressBar->size.x = (m_Player->getPosition().x / m_LevelEnd) * 680;
+	if (m_Progress < 0)
+		m_Progress = 0;
+	m_ProgressBar->size.x = (m_Progress / m_LevelEnd) * 680;
 }
 
 void Level::render()
 {
-	LD32Application::debugLayer->text(18) = std::to_string(m_Progress) + "/" + std::to_string(m_LevelEnd);
 	LD32Application::debugLayer->text(19) = "Stage " + std::to_string(m_Difficulty + 1);
 	if (m_GameOver)
 		m_Nuke->render();
@@ -229,6 +231,9 @@ void Level::render()
 
 	for (int i = 0; i < m_Projectiles.size(); i++)
 		m_Projectiles[i]->render();
+
+	LD32Application::debugLayer->addTemp(m_ProgressBarBackground);
+	LD32Application::debugLayer->addTemp(m_ProgressBar);
 
 	m_BackgroundLayer->render();
 	m_LevelLayer->render();

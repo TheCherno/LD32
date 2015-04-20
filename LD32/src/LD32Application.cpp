@@ -54,7 +54,11 @@ void LD32Application::loadAssets()
 {
 	TextureManager::add(new Texture("Player", "res/player.png"));
 	TextureManager::add(new Texture("Fighter", "res/ship_final.png"));
+#ifdef SPARKY_EMSCRIPTEN
+	TextureManager::add(new Texture("Shield", "res/shield_web.png"));
+#else
 	TextureManager::add(new Texture("Shield", "res/shield.png"));
+#endif
 	TextureManager::add(new Texture("Portal", "res/portal.png"));
 	TextureManager::add(new Texture("Projectile", "res/projectile.png"));
 #ifdef SPARKY_EMSCRIPTEN
@@ -67,10 +71,15 @@ void LD32Application::loadAssets()
 	TextureManager::add(new Texture("Ground", "res/level/ground.png"));
 
 	// Menu Images
+#ifdef SPARKY_EMSCRIPTEN
+	TextureManager::add(new Texture("Menu_Main_Gameover", "res/menu/web/menu_main_gameover.png"));
+	TextureManager::add(new Texture("Menu_Help_About", "res/menu/web/menu_help_about.png"));
+#else
 	TextureManager::add(new Texture("Menu_Main", "res/menu/menu_main.png"));
 	TextureManager::add(new Texture("Menu_Help", "res/menu/menu_help.png"));
 	TextureManager::add(new Texture("Menu_About", "res/menu/menu_about.png"));
 	TextureManager::add(new Texture("Menu_Gameover", "res/menu/menu_gameover.png"));
+#endif
 
 	FontManager::add(new Font("Handwritten", "res/CoertSchrift_Romaans.ttf", 64));
 

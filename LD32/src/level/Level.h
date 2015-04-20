@@ -31,7 +31,7 @@ private:
 	Nuke* m_Nuke;
 	bool m_GameOver;
 	int m_Progress, m_LevelEnd;
-	sparky::graphics::Sprite* m_ProgressBar;
+	sparky::graphics::Sprite* m_ProgressBar, *m_ProgressBarBackground;
 	float m_Red, m_Green, m_Blue;
 	int m_ColorChannel;
 public:

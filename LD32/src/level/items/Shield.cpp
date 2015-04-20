@@ -11,7 +11,16 @@ Shield::Shield(Player* player)
 	: Item(1, "Shield"), m_Player(player)
 {
 	m_Sprite = new Group(mat4::identity());
-	m_Sprite->add(new Sprite(0, 0, TextureManager::get("Shield")));
+	Sprite* shield = new Sprite(0, 0, 96, 96, TextureManager::get("Shield"));
+	m_Sprite->add(shield);
+#ifdef SPARKY_EMSCRIPTEN
+	std::vector<maths::vec2> uv(4);
+	uv[0] = maths::vec2(0, 0);
+	uv[1] = maths::vec2(0, 0.75f);
+	uv[2] = maths::vec2(0.75f, 0.75f);
+	uv[3] = maths::vec2(0.75f, 0);
+	shield->setUV(uv);
+#endif
 	m_Type = SHIELD;
 	m_Angle = 0.0f;
 	m_Transformation = &m_Sprite->getTransformRef();

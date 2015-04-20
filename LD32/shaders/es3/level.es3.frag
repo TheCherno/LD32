@@ -17,11 +17,19 @@ uniform sampler2D texture_5;
 uniform sampler2D texture_6;
 uniform sampler2D texture_7;
 
+uniform vec2 nuke_pos;
+uniform highp float nuke_intensity;
+uniform highp float fade_out;
+
 void main()
 {
-	float intensity = 400.0 / length(vs_position.xy - vec2(880, 1020)) + 0.2;
+	float intensity = 200.0 / length(vs_position.xy - vec2(880, 1020)) + 0.2;
 	vec4 sunColor = vec4(1, 0.9, 0.8, 1) * intensity;
 	vec4 texColor = vs_color;
+
+	float nukeIntensity = nuke_intensity / length(vs_position.xy - nuke_pos);
+	vec4 nuke = vec4(1, 0.8, 0.8, 1) * nukeIntensity;
+
 	if (vs_tid > 0.0)
 	{
 		int tid = int(vs_tid - 0.5);
@@ -42,6 +50,10 @@ void main()
 		else if (tid == 7)
 			texColor = vs_color * texture2D(texture_7, vs_uv);
 	}
-	gl_FragColor = texColor * intensity;
+	gl_FragColor = texColor * sunColor * fade_out;
+
+	if (nuke_pos.x > 0.0)
+		gl_FragColor *= nuke;
+
 	gl_FragColor.a = texColor.a;
 }
