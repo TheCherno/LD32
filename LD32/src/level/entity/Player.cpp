@@ -14,7 +14,6 @@ Player::Player(float x, float y, sparky::graphics::Window* window)
 	m_Delta = maths::vec2(0, 0);
 	m_ScreenPos = vec3(0, 0, 0);
 
-	audio::SoundManager::add(new audio::Sound("Jump", "res/audio/jump.ogg"));
 	m_Items.push_back(new Shield(this));
 
 	m_Transformation = mat4::translation(m_Position);
@@ -61,9 +60,6 @@ void Player::update()
 		ya = -5.0f;
 	move(xa, ya);
 
-// 	if (m_Window->isKeyTyped(GLFW_KEY_W))
-// 		audio::SoundManager::get("Jump")->play();
-
 	if (m_Delta.x < 0.0f)
 		m_Delta.x += 0.85f;
 	else if (m_Delta.x > 0.0f)
@@ -99,9 +95,6 @@ void Player::update()
 		float x = m_Position.x - 350;
 		m_Level->setOffset(vec2(x, 0));
 	}
-
-	if (m_Window->isKeyTyped(GLFW_KEY_F))
-		m_Level->generatePlatforms(1);
 
 	if (m_SelectedItem > 0)
 	{

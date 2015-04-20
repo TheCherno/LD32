@@ -11,7 +11,7 @@ Level::Level(unsigned int difficulty)
 {
 	m_PlatformOffsetX = 500.0f;
 	m_LevelLayer = new LevelLayer();
-	m_Ships = 0;
+	m_BackgroundLayer = new LevelLayer();
 	m_GameOver = false;
 	srand(time(NULL));
 	Sprite* bg = new Sprite(0, 0, 1280, 720, TextureManager::get("Level_Background"));
@@ -23,7 +23,7 @@ Level::Level(unsigned int difficulty)
 	uv0[3] = vec2(0.625f, 0);
 	bg->setUV(uv0);
 #endif
-	m_LevelLayer->add(bg);
+	m_BackgroundLayer->add(bg);
 
 	LevelObject* platform = new LevelObject(0, 0, new Sprite(0, 0, 605, 442, TextureManager::get("Platform")));
 #ifdef SPARKY_EMSCRIPTEN
@@ -36,17 +36,26 @@ Level::Level(unsigned int difficulty)
 #endif
 	addObject(platform);
 
+	m_Red = rand() % 1000 / 1000.0f;
+	m_Green = rand() % 1000 / 1000.0f;
+	m_Blue = rand() % 1000 / 1000.0f;
+	m_ColorChannel = rand() % 3;
+
 	m_Portal = new Portal(vec2(4500 + m_Difficulty * 5000, 250));
 	m_LevelLayer->add(m_Portal->getSprite());
 
-// 	addObject(new LevelObject(700, 550, new Sprite(0, 0, 400, 20, 0xffaa0000)));
-// 	addObject(new LevelObject(900, 0, new Sprite(0, 0, 300, 200, 0xffaa0000)));
-
-
-// 	for (int x = 0; x < 20; x++)
-// 		addObject(new LevelObject(x * 256, -200, new Sprite(TextureManager::get("Ground"))));
 	m_LevelLayer->getShader()->enable();
 	m_LevelLayer->getShader()->setUniform1f("fade_out", 1.0f);
+
+	m_BackgroundLayer->getShader()->enable();
+	m_BackgroundLayer->getShader()->setUniform1f("fade_out", 1.0f);
+
+	m_Progress = 0;
+	m_LevelEnd = 4500 + m_Difficulty * 5000;
+
+	LD32Application::debugLayer->add(new Sprite(300, 25, 680, 40, 0x2faaaaaa));
+	m_ProgressBar = new Sprite(305, 30, 0, 30, 0x2fffffff);
+	LD32Application::debugLayer->add(m_ProgressBar);
 }
 
 Level::~Level()
@@ -55,6 +64,7 @@ Level::~Level()
 		delete m_Entities[i];
 
 	delete m_LevelLayer;
+	delete m_BackgroundLayer;
 	delete m_Portal;
 }
 
@@ -62,12 +72,12 @@ Level::~Level()
 void Level::generatePlatforms(int count)
 {
 	float wm = m_Difficulty * 10;
-	if (wm > 50)
-		wm = 50;
+	if (wm > 80)
+		wm = 80;
 
 	float gm = m_Difficulty * 20;
-	if (gm > 150)
-		gm = 150;
+	if (gm > 250)
+		gm = 250;
 
 	unsigned int ym = 300 + m_Difficulty * 50;
 	if (ym > 800)
@@ -79,15 +89,30 @@ void Level::generatePlatforms(int count)
 		float w = (float)(rand() % 1000) / 2.0f + 100.0f - wm;
 		float h = (float)(rand() % 500) / 2.0f + 100;
 		float y = (float)(rand() % ym) / 2.0f - h / 2;
-		vec4 col = vec4(rand() % 1000 / 1000.0f, 0.2f, 0.2f, 1.0f);
+
+		vec4 col = vec4(1, 1, 1, 1);
+		if (m_ColorChannel == 0)
+			col = vec4(rand() % 1000 / 1000.0f, m_Green, m_Blue, 1.0f);
+		else if (m_ColorChannel == 1)
+			col = vec4(m_Red, rand() % 1000 / 1000.0f, m_Blue, 1.0f);
+		else if (m_ColorChannel == 2)
+			col = vec4(m_Red, m_Green, rand() % 1000 / 1000.0f, 1.0f);
+
 		addObject(new LevelObject(sx, y, new Sprite(0, 0, w, h, col)));
 		sx += w + 50 + gm;
 	}
+	float sx2 = m_Player->getPosition().x + 100;
+	for (int i = 0; i < count; i++)
+	{
+		float w = (float)(rand() % 300 + 100);
+		float h = (float)(rand() % 500 + 200);
+		addBackgroundObject(new LevelObject(sx2 + 20, 0, new Sprite(0, 0, w, h, 0x777777777), false));
+		sx2 += 100 + rand() % 100 + w;
+	}
 	m_PlatformOffsetX = sx + 100;
 
-	for (int i = 0; i < 1 + rand() % 8 + m_Difficulty * 4; i++)
+	for (int i = 0; i < 1 + rand() % 8 + (m_Difficulty < 20 ? m_Difficulty : 20) * 4; i++)
 	{
-		m_Ships++;
 		add(new Fighter(sx, 2550));
 	}
 
@@ -104,6 +129,12 @@ void Level::addObject(LevelObject* object)
 {
 	m_Objects.push_back(object);
 	m_LevelLayer->add(object->getSprite());
+}
+
+void Level::addBackgroundObject(LevelObject* object)
+{
+	m_Objects.push_back(object);
+	m_BackgroundLayer->add(object->getSprite());
 }
 
 void Level::addProjectile(Projectile* projectile)
@@ -168,10 +199,13 @@ void Level::update()
 	{
 		generatePlatforms(10);
 	}
+	m_Progress = (int) m_Player->getPosition().x;
+	m_ProgressBar->size.x = (m_Player->getPosition().x / m_LevelEnd) * 680;
 }
 
 void Level::render()
 {
+	LD32Application::debugLayer->text(18) = std::to_string(m_Progress) + "/" + std::to_string(m_LevelEnd);
 	LD32Application::debugLayer->text(19) = "Stage " + std::to_string(m_Difficulty + 1);
 	if (m_GameOver)
 		m_Nuke->render();
@@ -180,7 +214,10 @@ void Level::render()
 	{
 		LevelObject* object = m_Objects[i];
 		const vec2& pos = object->getPosition(); 
-		object->getSprite()->position = vec3(pos.x - m_Offset.x, pos.y - m_Offset.y, 0);
+		if (object->isCollidable())
+			object->getSprite()->position = vec3(pos.x - m_Offset.x, pos.y - m_Offset.y, 0);
+		else
+			object->getSprite()->position = vec3(pos.x - m_Offset.x * 0.3f, pos.y - m_Offset.y * 0.3f, 0);
 	}
 
 	for (int i = 0; i < m_Entities.size(); i++)
@@ -193,8 +230,9 @@ void Level::render()
 	for (int i = 0; i < m_Projectiles.size(); i++)
 		m_Projectiles[i]->render();
 
-	m_Player->render();
+	m_BackgroundLayer->render();
 	m_LevelLayer->render();
+	m_Player->render();
 }
 
 std::vector<LevelObject*> Level::getObjects(const Entity* entity, float radius)

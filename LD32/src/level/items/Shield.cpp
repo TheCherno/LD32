@@ -60,9 +60,13 @@ bool Shield::collision()
 					p->resetLifeSpan();
 					m_Player->m_Score += 20;
 					p->setScore(100 + (m_Player->m_JumpTimer < 6.0f) * 100);
+					audio::SoundManager::get("Ricochet")->play();
+					audio::SoundManager::get("Ricochet")->setGain(0.15f);
 				}
 				else
 				{
+					audio::SoundManager::get("Hurt")->play();
+					audio::SoundManager::get("Hurt")->setGain(0.40f);
 					m_Player->damage(rand() % 40);
 					p->remove();
 				}

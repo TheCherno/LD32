@@ -6,7 +6,7 @@
 class Nuke : public Entity
 {
 private:
-	sparky::graphics::Shader* m_Shader;
+	sparky::graphics::Shader* m_Shader, *m_BGShader;
 	sparky::maths::vec2 m_Light;
 	float m_Intensity;
 	float m_FadeOut;

@@ -32,7 +32,7 @@ LD32Application::~LD32Application()
 
 void LD32Application::init()
 {
-	m_Window = createWindow("LD32", 1280, 720);
+	m_Window = createWindow("Shift", 1280, 720);
 	loadAssets();
 	
 	debugLayer = new DebugLayer();
@@ -75,11 +75,14 @@ void LD32Application::loadAssets()
 	FontManager::add(new Font("Handwritten", "res/CoertSchrift_Romaans.ttf", 64));
 
 	SoundManager::add(new Sound("Music", "res/Shift.ogg"));
+	SoundManager::add(new Sound("Shoot", "res/audio/shoot.ogg"));
+	SoundManager::add(new Sound("Ricochet", "res/audio/ricochet.ogg"));
+	SoundManager::add(new Sound("Hurt", "res/audio/hurt.ogg"));
 }
 
 void LD32Application::tick()
 {
-	m_FPS->text = std::to_string(getFPS()) + " fps";
+	// m_FPS->text = std::to_string(getFPS()) + " fps";
 }
 
 void LD32Application::update()

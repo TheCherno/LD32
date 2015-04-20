@@ -8,6 +8,8 @@ using namespace sparky;
 using namespace graphics;
 using namespace maths;
 
+audio::Sound* Fighter::m_ShootSound = nullptr;
+
 Fighter::Fighter(float x, float y)
 	: Entity(x, y)
 {
@@ -20,6 +22,9 @@ Fighter::Fighter(float x, float y)
 	ya = 0;
 	m_Time = 0;
 	m_Range = 400;
+
+	if (m_ShootSound == nullptr)
+		m_ShootSound = audio::SoundManager::get("Shoot");
 	
 	m_Type = ENEMY;
 }
@@ -43,6 +48,8 @@ void Fighter::update()
 		{
 			float angle = atan2(m_Position.y - player.y, m_Position.x - player.x) + M_PI;
 			m_Level->addProjectile(new TimeProjectile(m_Position.x + 64, m_Position.y + 64, angle, this));
+			m_ShootSound->play();
+			m_ShootSound->setGain(0.45f);
 		}
 	}
 

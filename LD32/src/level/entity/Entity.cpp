@@ -22,6 +22,9 @@ bool Entity::hasCollided(float xa, float ya) const
 
 	for (LevelObject* object : objects)
 	{
+		if (!object->isCollidable())
+			continue;
+
 		const vec3& pos = object->getPosition();
 		const vec2& size = object->getSize();
 
@@ -70,6 +73,9 @@ Direction Entity::collision(float& xa, float& ya) const
 		yy += sign(yao);
 		yb--;
 	}
+
+	if (xao == 0 && yao == 0)
+		return NONE;
 
 	if (x)
 		return xao < 0 ? LEFT : RIGHT;

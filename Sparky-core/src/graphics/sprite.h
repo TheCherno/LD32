@@ -8,6 +8,7 @@ namespace sparky { namespace graphics {
 	{
 	public:
 		maths::vec3& position;
+		maths::vec2& size;
 	public:
 		Sprite(Texture* texture);
 		Sprite(float x, float y, Texture* texture);

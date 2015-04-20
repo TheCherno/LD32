@@ -15,6 +15,7 @@ void Nuke::init(Level* level)
 {
 	Entity::init(level);
 	m_Shader = m_Level->m_LevelLayer->getShader();
+	m_BGShader = m_Level->m_BackgroundLayer->getShader();
 }
 
 void Nuke::update()
@@ -39,5 +40,11 @@ void Nuke::render()
 	m_Shader->setUniform2f("nuke_pos", m_Position);
 	m_Shader->setUniform1f("nuke_intensity", m_Intensity);
 	m_Shader->setUniform1f("fade_out", m_FadeOut);
+
+	m_BGShader->enable();
+	m_BGShader->setUniform2f("nuke_pos", m_Position);
+	m_BGShader->setUniform1f("nuke_intensity", m_Intensity);
+	m_BGShader->setUniform1f("fade_out", m_FadeOut);
+
 }
 
