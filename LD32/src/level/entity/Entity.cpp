@@ -28,17 +28,20 @@ bool Entity::hasCollided(float xa, float ya) const
 		const vec3& pos = object->getPosition();
 		const vec2& size = object->getSize();
 
-		if (m_Position.x + xa < pos.x + size.x && m_Position.x + xa + m_Sprite->getSize().x > pos.x)
-			if (m_Position.y + ya < pos.y + size.y && m_Position.y + ya + m_Sprite->getSize().y > pos.y)
+		if (m_Position.x + xa <= pos.x + size.x && m_Position.x + xa + m_Sprite->getSize().x >= pos.x)
+			if (m_Position.y + ya <= pos.y + size.y && m_Position.y + ya + m_Sprite->getSize().y >= pos.y)
 				return true;
 	}
 	return false;
 }
 
-Direction Entity::collision(float& xa, float& ya) const
+int Entity::collision(float& xa, float& ya) const
 {
 	using namespace sparky;
 	using namespace maths;
+
+	if (xa == 0 && ya == 0)
+		return NONE;
 
 	float xao = xa;
 	float yao = ya;
@@ -48,59 +51,67 @@ Direction Entity::collision(float& xa, float& ya) const
 
 	float xx = sign(xao);
 	float xb = abs(xa);
-	while (xb > 1.0f)
+	while (xb >= 1.0f)
 	{
 		x = hasCollided(xx, 0);
 		if (x)
 		{
-			xa = xx - sign(xao);
+			xa = xx - sign(xao) - 0.5f * sign(xao);
 			break;
 		}
 		xx += sign(xao);
 		xb--;
 	}
 
+	if (xb < 1.0f)
+		x = hasCollided(xx + xb * sign(xao), 0);
+
 	float yy = sign(yao);
 	float yb = abs(ya);
-	while (yb > 1.0f)
+	while (yb >= 1.0f)
 	{
 		y = hasCollided(0, yy);
 		if (y)
 		{
-			ya = yy - sign(yao);
+			ya = yy - sign(yao) - 0.5f * sign(yao);
 			break;
 		}
 		yy += sign(yao);
 		yb--;
 	}
 
-	if (xao == 0 && yao == 0)
-		return NONE;
+	if (yb < 1.0f)
+		y = hasCollided(0, yy + yb * sign(yao));
 
+	int result = 0x0;
 	if (x)
-		return xao < 0 ? LEFT : RIGHT;
+		result |= xao < 0 ? 0x0F00 : 0xF000;
 	if (y)
-		return yao < 0 ? BOTTOM : TOP;
+		result |= yao < 0 ? 0x00F0 : 0x000F;
 
-	return NONE;
+	return result;
 }
 
 void Entity::move(float xa, float ya)
 {
 	// TODO: Collision!
-
 	float xo = xa;
 	float yo = ya;
-	m_CollisionDirection = collision(xa, ya);
+	int cDir = collision(xa, ya);
+	std::cout << std::hex << cDir << std::endl;
+	if ((cDir & 0x00F0) > 0x0)
+		m_CollisionDirection = BOTTOM;
+	else
+		m_CollisionDirection = NONE;
 #if 0
 	LD32Application::debugLayer->text(10) = "Direction: " + directionToString(m_CollisionDirection);
 	LD32Application::debugLayer->text(11) = std::to_string(xa) + "(" + std::to_string(xo) + "), " + std::to_string(ya) + "(" + std::to_string(yo) + ")";
 #endif
 
-	if ((m_CollisionDirection & 0x00FF) > 0x0 || m_CollisionDirection == 0 || xo != xa)
+	if ((cDir & 0xFF00) == 0x0 || xo != xa)
 		m_Position.x += xa;
 
-	if ((m_CollisionDirection & 0xFF00) > 0x0 || m_CollisionDirection == 0 || yo != ya)
+	if ((cDir & 0x00FF) == 0x0 || yo != ya)
 		m_Position.y += ya;
 
 }

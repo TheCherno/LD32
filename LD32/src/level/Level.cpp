@@ -203,7 +203,7 @@ void Level::update()
 	m_Progress = (int) m_Player->getPosition().x;
 	if (m_Progress < 0)
 		m_Progress = 0;
-	m_ProgressBar->size.x = (m_Progress / m_LevelEnd) * 680;
+	m_ProgressBar->size.x = (int)(((float)m_Progress / (float)m_LevelEnd) * 680.0f);
 }
 
 void Level::render()

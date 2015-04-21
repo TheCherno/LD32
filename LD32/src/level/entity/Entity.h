@@ -50,7 +50,7 @@ protected:
 	Projectile* projectileCollision() const;
 private:
 	bool hasCollided(float xa, float ya) const;
-	Direction collision(float& xa, float& ya) const;
+	int collision(float& xa, float& ya) const;
 
 	std::string directionToString(Direction dir)
 	{
